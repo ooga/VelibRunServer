@@ -45,14 +45,4 @@ class UsersController extends FOSRestController
         }
         return new View($user->getId(), $code);
     }
-
-    public function postMessageAction()
-    {
-        $gcm = $this->get("canal_tp_race_server.gcm");
-        $response = $gcm->send(array(
-            "message" => "test from service"
-        ));
-
-        return new View($response);
-    }
 }

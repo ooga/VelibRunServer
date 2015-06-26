@@ -48,6 +48,11 @@ class Checkpoint {
     protected $speed;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    protected $remainingDistance;
+
+    /**
      * @ORM\ManyToOne(targetEntity="CanalTP\RaceServerBundle\Entity\User", inversedBy="checkpoints")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      **/
@@ -85,6 +90,10 @@ class Checkpoint {
 
     public function getSpeed() {
         return $this->speed;
+    }
+
+    public function getRemainingDistance() {
+        return $this->remainingDistance;
     }
 
     public function getUser() {
@@ -127,6 +136,11 @@ class Checkpoint {
 
     public function setSpeed($speed) {
         $this->speed = $speed;
+        return $this;
+    }
+
+    public function setRemainingDistance($remainingDistance) {
+        $this->remainingDistance = $remainingDistance;
         return $this;
     }
 

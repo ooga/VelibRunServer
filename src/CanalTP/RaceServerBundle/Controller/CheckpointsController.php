@@ -6,6 +6,8 @@ use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\View\View;
 use CanalTP\RaceServerBundle\Entity\Checkpoint;
+use CanalTP\RaceServerBundle\Builder\MessageBuilder;
+use CanalTP\RaceServerBundle\Api\GoogleDirectionsApi;
 
 class CheckpointsController extends FOSRestController
 {
@@ -39,22 +41,31 @@ class CheckpointsController extends FOSRestController
                 $race = $em->getRepository('CanalTP\RaceServerBundle\Entity\Race')->findOneBy(
                     array('id' => $race_id)
                 );
+                $api = new GoogleDirectionsApi();
+                $api->setOrigin($checkpoint->getLatitude().",".$checkpoint->getLongitude());
+                $api->setDestination($race->getDestination());
+                $checkpoint->setRemainingDistance($api->getRemainingDistance());
                 $user->addCheckpoint($checkpoint);
                 $race->addCheckpoint($checkpoint);
                 $em->persist($race);
+                $builder = new MessageBuilder($em);
+                $message = $builder->createMessage($race);
                 $em->flush();
+
+                $this->postMessage($message, $race_id);
             }
         }
         return new View($checkpoint->getId(), $code);
     }
 
-    public function postMessageAction()
+    protected function postMessage($message, $topic = null)
     {
         $gcm = $this->get("canal_tp_race_server.gcm");
-        $response = $gcm->send(array(
-            "message" => "test from service"
-        ));
+        if ($topic) {
+            $gcm->setTopic($topic);
+        }
+        $response = $gcm->send($message);
 
-        return new View($response);
+        return $response;
     }
 }

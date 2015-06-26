@@ -3,6 +3,7 @@
 namespace CanalTP\RaceServerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use CanalTP\RaceServerBundle\Api\GoogleDirectionsApi;
 
 /**
  * @ORM\Entity
@@ -28,6 +29,21 @@ class Race {
     protected $name;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    protected $origin;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $destination;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $distance;
+
+    /**
      * @ORM\OneToMany(targetEntity="CanalTP\RaceServerBundle\Entity\User", mappedBy="race", cascade={"persist"})
      */
     protected $users;
@@ -36,6 +52,11 @@ class Race {
      * @ORM\OneToMany(targetEntity="CanalTP\RaceServerBundle\Entity\Checkpoint", mappedBy="race", cascade={"persist"})
      */
     protected $checkpoints;
+
+    public function __construct() {
+        $this->origin = "20 Rue Hector Malot, 75012 Paris, France";
+        $this->destination = "Cathédrale Notre-Dame de Paris, 6 Parvis Notre-Dame - Pl. Jean-Paul II, 75004 Paris";
+    }
 
     public function getId() {
         return $this->id;
@@ -47,6 +68,18 @@ class Race {
 
     public function getName() {
         return $this->name;
+    }
+
+    public function getOrigin() {
+        return $this->origin;
+    }
+
+    public function getDestination() {
+        return $this->destination;
+    }
+
+    public function getDistance() {
+        return $this->distance;
     }
 
     public function getUsers() {
@@ -69,6 +102,21 @@ class Race {
 
     public function setName($name) {
         $this->name = $name;
+        return $this;
+    }
+
+    public function setOrigin($origin) {
+        $this->origin = $origin;
+        return $this;
+    }
+
+    public function setDestination($destination) {
+        $this->destination = $destination;
+        return $this;
+    }
+
+    public function setDistance($distance) {
+        $this->distance = $distance;
         return $this;
     }
 
@@ -99,5 +147,9 @@ class Race {
      */
     public function onPrePersist() {
         $this->createdAt = new \DateTime();
+        $api = new GoogleDirectionsApi();
+        $api->setOrigin($this->origin);
+        $api->setDestination($this->destination);
+        $this->distance = $api->getRemainingDistance();
     }
 }
