@@ -50,7 +50,7 @@ class MessageBuilder {
         return $messages;
     }
 
-    protected function createMessageObject(User $user, Checkpoint $checkpoint) {
+    protected function createMessageObject(User $user, $checkpoint) {
         $message = new Message();
         $message->setColor($this->pickColor());
         $message->setName($user->getName());
