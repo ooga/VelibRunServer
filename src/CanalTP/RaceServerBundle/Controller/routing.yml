@@ -1,0 +1,22 @@
+races:
+    type: rest
+    resource: CanalTP\RaceServerBundle\Controller\RacesController
+
+users:
+    type: rest
+    parent: races
+    resource: CanalTP\RaceServerBundle\Controller\UsersController
+
+users_checkpoints:
+    type: rest
+    parent: users
+    resource: CanalTP\RaceServerBundle\Controller\CheckpointsController
+
+races_checkpoints:
+    type: rest
+    parent: races
+    resource: CanalTP\RaceServerBundle\Controller\CheckpointsController
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation

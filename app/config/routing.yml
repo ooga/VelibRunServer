@@ -1,0 +1,3 @@
+app:
+    type: rest
+    resource: "@CanalTPRaceServerBundle/Resources/config/routing.yml"
