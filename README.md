@@ -52,6 +52,10 @@ Create checkpoint
 | accur      |
 | speed      |
 
+Android GPS tracking app
+------------------------
+[VelibRun] (https://github.com/VincentCATILLON/VelibRun) 
+
 Contributors
 ------------
 - [Stanley Blaise] (https://github.com/stanosz) 
